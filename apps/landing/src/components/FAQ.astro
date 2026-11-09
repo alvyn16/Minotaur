@@ -1,0 +1,55 @@
+---
+const faqs = [
+	{
+		q: 'Is Minotaur Launcher completely free?',
+		a: 'Yes. Minotaur Launcher is 100% free and open-source software licensed under GPL-3.0. There are no subscriptions, paywalls, or hidden fees.',
+	},
+	{
+		q: 'Can I play without a Microsoft account?',
+		a: 'Yes. Minotaur provides first-class support for offline play. You can create an offline account with any custom username and UUID to play single-player worlds or connect to community cracked servers. Microsoft account login is also fully supported for official multiplayer servers.',
+	},
+	{
+		q: 'Do I need to install Java beforehand?',
+		a: 'No. When you install or run any Minecraft instance, Minotaur Launcher automatically detects the required Java version (Java 8, 17, 21, etc.) and downloads a clean, verified Eclipse Temurin OpenJDK runtime directly to an isolated directory.',
+	},
+	{
+		q: 'How do I install mods and modpacks?',
+		a: 'Inside Minotaur Launcher, you can browse thousands of mods, modpacks, resource packs, and shaders across Fabric, Forge, NeoForge, and Quilt with a single click. Dependencies are resolved automatically.',
+	},
+	{
+		q: 'Why choose Minotaur Launcher over others?',
+		a: 'Minotaur is built on native Rust (Tauri) rather than heavy Electron wrappers. It launches in milliseconds, uses very little RAM, respects your privacy with zero telemetry scripts, and supports custom offline skin management out of the box.',
+	},
+];
+---
+
+<section id="faq" class="py-20 bg-dark-bg/80 border-t border-dark-border/40">
+	<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+		<div class="text-center">
+			<h2 class="text-xs font-bold uppercase tracking-wider text-minotaur">Got Questions?</h2>
+			<p class="mt-2 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+				Frequently Asked Questions
+			</p>
+		</div>
+
+		<div class="mt-12 space-y-4">
+			{
+				faqs.map((faq) => (
+					<details class="group rounded-xl border border-dark-border bg-dark-card p-6 [&_summary::-webkit-details-marker]:hidden transition-colors hover:border-minotaur/30">
+						<summary class="flex cursor-pointer items-center justify-between text-white font-semibold text-base sm:text-lg">
+							<span>{faq.q}</span>
+							<span class="ml-4 shrink-0 rounded-full border border-dark-border p-1.5 text-slate-400 group-open:rotate-180 group-open:text-minotaur transition-transform duration-200">
+								<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+								</svg>
+							</span>
+						</summary>
+						<p class="mt-4 text-sm text-slate-300 leading-relaxed border-t border-dark-border/40 pt-4">
+							{faq.a}
+						</p>
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>
