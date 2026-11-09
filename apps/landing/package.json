@@ -1,0 +1,20 @@
+{
+	"name": "@minotaur/landing",
+	"type": "module",
+	"version": "1.0.0",
+	"scripts": {
+		"dev": "astro dev --port 4321",
+		"start": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/tailwind": "^5.1.5",
+		"astro": "^5.4.1",
+		"tailwindcss": "^3.4.17"
+	},
+	"devDependencies": {
+		"typescript": "^5.8.2"
+	}
+}

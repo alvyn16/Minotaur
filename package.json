@@ -27,6 +27,8 @@
 		"i18n:coverage": "node scripts/run.mjs coverage-i18n --write packages/ui/src/layouts/wrapped/settings/language-settings/language-settings-coverage.generated.ts --quiet",
 		"changelog:collect": "node scripts/run.mjs collect-changelog",
 		"changelog:combine-for-app": "node scripts/run.mjs build-theseus-release-notes",
+		"landing:dev": "pnpm --filter @minotaur/landing dev",
+		"landing:build": "pnpm --filter @minotaur/landing build",
 		"scripts": "node scripts/run.mjs"
 	},
 	"devDependencies": {
