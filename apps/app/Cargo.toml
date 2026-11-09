@@ -1,10 +1,10 @@
 [package]
 name = "theseus_gui"
 # The actual version is set by the theseus-build workflow on tagging
-version = "1.0.0-local"
+version = "1.0.0"
 edition.workspace = true
 description = "Minotaur is an independent, privacy-focused Minecraft launcher with offline account support"
-repository = "https://github.com/minotaur-launcher/minotaur"
+repository = "https://github.com/alvyn16/Minotaur"
 license = "GPL-3.0-only"
 
 [dependencies]
