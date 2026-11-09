@@ -17,7 +17,7 @@ const { formatMessage } = useVIntl()
 const messages = defineMessages({
 	welcomeTitle: {
 		id: 'app.welcome-screen.title',
-		defaultMessage: 'Welcome to Modrinth',
+		defaultMessage: 'Welcome to Minotaur Launcher',
 	},
 	welcomeDescription: {
 		id: 'app.welcome-screen.description',
