@@ -16,7 +16,7 @@ pub struct DiscordGuard {
 
 pub const DISCORD_CLIENT_ID: &str = match option_env!("MINOTAUR_DISCORD_CLIENT_ID") {
     Some(id) => id,
-    None => "1123683254248148992",
+    None => "1369466530855653378",
 };
 
 impl DiscordGuard {
