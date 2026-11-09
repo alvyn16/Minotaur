@@ -287,7 +287,9 @@ async fn run_credentials(
         }
     }
 
-    crate::minecraft_skins::flush_pending_skin_change().await?;
+    if !credentials.is_offline() {
+        crate::minecraft_skins::flush_pending_skin_change().await?;
+    }
     crate::launcher::launch_minecraft(
         &java_args,
         &launch_env_args,

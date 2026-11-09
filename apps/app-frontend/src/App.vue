@@ -1313,22 +1313,6 @@ const modrinthAccountMenuOptions = computed(() => [
 		action: () => router.push(`/user/${encodeURIComponent(credentials.value.user.username)}`),
 	},
 	{
-		id: 'plus',
-		label: formatMessage(messages.upgradeToModrinthPlus),
-		icon: ArrowBigUpDashIcon,
-		type: 'link',
-		href: 'https://modrinth.plus?app',
-		target: '_blank',
-		tone: 'purple',
-		shown: !hasPlus.value,
-	},
-	{
-		id: 'add-friend',
-		label: formatMessage(messages.addFriend),
-		icon: UserPlusIcon,
-		action: () => sidebar.value?.showAddFriendModal(),
-	},
-	{
 		id: 'flags',
 		label: formatMessage(commonSettingsMessages.featureFlags),
 		icon: ToggleRightIcon,
@@ -2068,18 +2052,6 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 				to="/screenshots"
 			>
 				<ImageIcon />
-			</NavButton>
-			<NavButton
-				v-tooltip.right="formatMessage(messages.modrinthHosting)"
-				to="/hosting/manage"
-				:is-primary="(r) => r.path === '/hosting/manage' || r.path === '/hosting/manage/'"
-				:is-subpage="
-					(r) =>
-						(r.path.startsWith('/hosting/manage/') && r.path !== '/hosting/manage/') ||
-						((r.path.startsWith('/browse') || r.path.startsWith('/project')) && r.query.sid)
-				"
-			>
-				<ServerStackIcon />
 			</NavButton>
 			<suspense>
 				<QuickInstanceSwitcher>

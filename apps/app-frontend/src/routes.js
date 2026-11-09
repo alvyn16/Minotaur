@@ -14,46 +14,8 @@ export default new createRouter({
 			},
 		},
 		{
-			path: '/hosting/manage/',
-			name: 'Servers',
-			component: () => import('@/platform/adapters/hosting/servers-page.vue'),
-		},
-		{
-			path: '/hosting/manage/:id',
-			name: 'ServerManage',
-			component: () => import('@/platform/adapters/hosting/manage/layout.vue'),
-			children: [
-				{
-					path: 'play',
-					name: 'ServerManagePlay',
-					component: () => import('@/platform/adapters/hosting/manage/play-page.vue'),
-				},
-				{
-					path: '',
-					name: 'ServerManageOverview',
-					component: () => import('@/platform/adapters/hosting/manage/overview-page.vue'),
-				},
-				{
-					path: 'content',
-					name: 'ServerManageContent',
-					component: () => import('@/platform/adapters/hosting/manage/content-page.vue'),
-				},
-				{
-					path: 'files',
-					name: 'ServerManageFiles',
-					component: () => import('@/platform/adapters/hosting/manage/files-page.vue'),
-				},
-				{
-					path: 'backups',
-					name: 'ServerManageBackups',
-					component: () => import('@/platform/adapters/hosting/manage/backups-page.vue'),
-				},
-				{
-					path: 'access',
-					name: 'ServerManageAccess',
-					component: () => import('@/platform/adapters/hosting/manage/access-page.vue'),
-				},
-			],
+			path: '/hosting/:pathMatch(.*)*',
+			redirect: '/',
 		},
 		{
 			path: '/browse/:projectType',

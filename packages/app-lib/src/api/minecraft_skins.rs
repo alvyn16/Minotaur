@@ -84,6 +84,48 @@ mod assets {
 
 mod png_util;
 
+#[derive(Serialize, Deserialize)]
+struct OfflineSkinState {
+    texture_key: String,
+    variant: MinecraftSkinVariant,
+}
+
+async fn get_offline_equipped_skin(
+    pool: &sqlx::SqlitePool,
+    uuid: Uuid,
+) -> Option<OfflineSkinState> {
+    use sqlx::Row;
+    let key = format!("offline_skin:{uuid}");
+    let row = sqlx::query("SELECT value FROM app_metadata WHERE key = ?")
+        .bind(key)
+        .fetch_optional(pool)
+        .await
+        .ok()??;
+    let value: String = row.get("value");
+    serde_json::from_str(&value).ok()
+}
+
+async fn set_offline_equipped_skin(
+    pool: &sqlx::SqlitePool,
+    uuid: Uuid,
+    texture_key: &str,
+    variant: MinecraftSkinVariant,
+) -> crate::Result<()> {
+    let key = format!("offline_skin:{uuid}");
+    let val = serde_json::to_string(&OfflineSkinState {
+        texture_key: texture_key.to_string(),
+        variant,
+    })?;
+    sqlx::query(
+        "INSERT INTO app_metadata (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+    )
+    .bind(key)
+    .bind(val)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
 const SKIN_CHANGE_DEBOUNCE: Duration = Duration::from_secs(10);
 
 static PENDING_SKIN_CHANGE: LazyLock<Mutex<PendingSkinChangeState>> =
@@ -347,10 +389,18 @@ pub async fn get_available_skins() -> crate::Result<Vec<Skin>> {
         .and_then(PendingEffectiveSkinChange::skin);
 
     let fallback_default_skin = get_fallback_default_skin()?;
+    let offline_skin = if selected_credentials.is_offline() {
+        get_offline_equipped_skin(&state.pool, profile_id).await
+    } else {
+        None
+    };
+
     let current_skin_texture_key = pending_skin.as_ref().map_or_else(
         || {
             if pending_unequip {
                 Arc::clone(&fallback_default_skin.texture_key)
+            } else if let Some(offline) = &offline_skin {
+                Arc::from(offline.texture_key.as_str())
             } else if let Some(current_skin) = current_skin {
                 current_skin.texture_key()
             } else {
@@ -363,6 +413,8 @@ pub async fn get_available_skins() -> crate::Result<Vec<Skin>> {
         || {
             if pending_unequip {
                 fallback_default_skin.variant
+            } else if let Some(offline) = &offline_skin {
+                offline.variant
             } else if let Some(current_skin) = current_skin {
                 current_skin.variant
             } else {
@@ -554,14 +606,24 @@ pub async fn add_and_equip_custom_skin(
     )
     .await?;
 
-    set_pending_skin_change(PendingSkinChange::AddAndEquipCustom {
-        selected_credentials,
-        texture_blob: Bytes::clone(&texture_blob),
-        variant,
-        cape_id,
-        local_texture_key: Arc::clone(&local_texture_key),
-    })
-    .await;
+    if selected_credentials.is_offline() {
+        set_offline_equipped_skin(
+            &state.pool,
+            selected_credentials.offline_profile.id,
+            &local_texture_key,
+            variant,
+        )
+        .await?;
+    } else {
+        set_pending_skin_change(PendingSkinChange::AddAndEquipCustom {
+            selected_credentials,
+            texture_blob: Bytes::clone(&texture_blob),
+            variant,
+            cape_id,
+            local_texture_key: Arc::clone(&local_texture_key),
+        })
+        .await;
+    }
 
     Ok(Skin {
         texture_key: local_texture_key,
@@ -696,6 +758,17 @@ pub async fn equip_skin(skin: Skin) -> crate::Result<()> {
     let selected_credentials = Credentials::get_default_credential(&state.pool)
         .await?
         .ok_or(ErrorKind::NotLoggedIn)?;
+
+    if selected_credentials.is_offline() {
+        set_offline_equipped_skin(
+            &state.pool,
+            selected_credentials.offline_profile.id,
+            &skin.texture_key,
+            skin.variant,
+        )
+        .await?;
+        return Ok(());
+    }
 
     set_pending_skin_change(PendingSkinChange::Equip {
         selected_credentials,
@@ -979,6 +1052,15 @@ pub async fn unequip_skin() -> crate::Result<()> {
         .await?
         .ok_or(ErrorKind::NotLoggedIn)?;
 
+    if selected_credentials.is_offline() {
+        let key = format!("offline_skin:{}", selected_credentials.offline_profile.id);
+        let _ = sqlx::query("DELETE FROM app_metadata WHERE key = ?")
+            .bind(key)
+            .execute(&state.pool)
+            .await;
+        return Ok(());
+    }
+
     set_pending_skin_change(PendingSkinChange::Unequip {
         selected_credentials,
     })
@@ -1075,10 +1157,12 @@ fn schedule_pending_skin_change_flush(profile_id: Uuid, generation: u64) {
         ))
         .await
         {
-            let _ = crate::event::emit::emit_warning(&format!(
-                "Failed to apply pending Minecraft skin change: {error}"
-            ))
-            .await;
+            if !error.to_string().contains("an online profile") {
+                let _ = crate::event::emit::emit_warning(&format!(
+                    "Failed to apply pending Minecraft skin change: {error}"
+                ))
+                .await;
+            }
         }
     });
 }
@@ -1172,6 +1256,10 @@ async fn flush_pending_skin_change_inner(
         };
 
         if let Err(error) = execute_pending_skin_change(&entry.change).await {
+            if error.to_string().contains("an online profile") {
+                // Offline profile: discard pending change to avoid infinite retry loop
+                return Ok(());
+            }
             let profile_id = entry.change.profile_id();
             let generation = entry.generation;
             let mut state = PENDING_SKIN_CHANGE.lock().await;
