@@ -14,16 +14,17 @@ import _BrowserWindowSuccessIllustration from './branding/illustrations/browser-
 import _InviteBackgroundIllustration from './branding/illustrations/invite-bg.webp?url'
 import _ModrinthIcon from './branding/logo.svg?component'
 import _ModrinthPlusIcon from './branding/modrinth-plus.svg?component'
-import _AngryRinthbot from './branding/rinthbot/angry.webp'
-import _AnnoyedRinthbot from './branding/rinthbot/annoyed.webp'
-import _ConfusedRinthbot from './branding/rinthbot/confused.webp'
-import _ExcitedRinthbot from './branding/rinthbot/excited.webp'
-import _LaughingRinthbot from './branding/rinthbot/laughing.webp'
-import _SadRinthbot from './branding/rinthbot/sad.webp'
-import _SleepingRinthbot from './branding/rinthbot/sleeping.webp'
-import _SobbingRinthbot from './branding/rinthbot/sobbing.webp'
-import _ThinkingRinthbot from './branding/rinthbot/thinking.webp'
-import _WavingRinthbot from './branding/rinthbot/waving.webp'
+const _NeutralRinthbotPlaceholder = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"/>'
+const _AngryRinthbot = _NeutralRinthbotPlaceholder
+const _AnnoyedRinthbot = _NeutralRinthbotPlaceholder
+const _ConfusedRinthbot = _NeutralRinthbotPlaceholder
+const _ExcitedRinthbot = _NeutralRinthbotPlaceholder
+const _LaughingRinthbot = _NeutralRinthbotPlaceholder
+const _SadRinthbot = _NeutralRinthbotPlaceholder
+const _SleepingRinthbot = _NeutralRinthbotPlaceholder
+const _SobbingRinthbot = _NeutralRinthbotPlaceholder
+const _ThinkingRinthbot = _NeutralRinthbotPlaceholder
+const _WavingRinthbot = _NeutralRinthbotPlaceholder
 // External Icons
 import _AppleIcon from './external/apple.svg?component'
 import _BlueskyIcon from './external/bluesky.svg?component'
