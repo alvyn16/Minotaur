@@ -4,7 +4,7 @@ name = "theseus_gui"
 version = "1.0.0-local"
 edition.workspace = true
 description = "Minotaur is an independent, privacy-focused Minecraft launcher with offline account support"
-repository = "https://github.com/openmondrith/minotaur"
+repository = "https://github.com/minotaur-launcher/minotaur"
 license = "GPL-3.0-only"
 
 [dependencies]

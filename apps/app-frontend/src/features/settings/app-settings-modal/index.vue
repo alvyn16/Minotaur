@@ -361,7 +361,7 @@ const messages = defineMessages({
 	},
 	appVersion: {
 		id: 'app.settings.app-version',
-		defaultMessage: 'Modrinth App {version}',
+		defaultMessage: 'Minotaur Launcher {version}',
 	},
 	macos: {
 		id: 'app.settings.operating-system.macos',

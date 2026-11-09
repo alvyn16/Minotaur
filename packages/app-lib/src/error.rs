@@ -147,7 +147,7 @@ pub enum ErrorKind {
     SharedInstanceFileNotAllowed(String),
 
     #[error(
-        "a newer version of this shared instance was pushed from another Modrinth App installation"
+        "a newer version of this shared instance was pushed from another Minotaur Launcher installation"
     )]
     SharedInstanceOwnerBehind,
 

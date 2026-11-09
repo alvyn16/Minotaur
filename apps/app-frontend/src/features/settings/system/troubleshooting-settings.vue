@@ -65,7 +65,7 @@ const messages = defineMessages({
 	debugInfoDescription: {
 		id: 'app.settings.resource-management.debug-info.description',
 		defaultMessage:
-			'Export app logs and diagnostic data to a ZIP file to share with Modrinth support.',
+			'Export app logs and diagnostic data to a ZIP file for troubleshooting.',
 	},
 	exportDebugInfo: {
 		id: 'app.settings.resource-management.debug-info.export',

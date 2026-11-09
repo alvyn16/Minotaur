@@ -49,7 +49,7 @@ export const instanceAdmonitionsMessages = defineMessages({
 	sharedInstanceOwnerUpdateBody: {
 		id: 'app.instance.admonitions.shared-instance.owner-update-body',
 		defaultMessage:
-			'You pushed an update to this shared instance from another Modrinth App installation. Download the latest changes to keep managing it from here.',
+			'You pushed an update to this shared instance from another Minotaur Launcher installation. Download the latest changes to keep managing it from here.',
 	},
 	sharedInstanceOwnerUpdateButton: {
 		id: 'app.instance.admonitions.shared-instance.owner-update-button',
