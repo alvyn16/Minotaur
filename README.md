@@ -10,25 +10,25 @@ Built with [Tauri v2](https://tauri.app/) (Rust) and [Vue 3](https://vuejs.org/)
 [![GitHub stars](https://img.shields.io/github/stars/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/issues)
 
-[Download](#-download--installation) • [Features](#-key-features) • [Building from Source](#-building-from-source) • [Architecture](#-architecture)
+[Download](#download--installation) • [Features](#key-features) • [Building from Source](#building-from-source) • [Architecture](#architecture)
 
 </div>
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- **⚡ Blazing Fast Performance:** Powered by a native Rust backend and an optimized Vue 3 frontend, Minotaur starts in milliseconds and consumes minimal system resources.
-- **👤 Offline & Microsoft Accounts:** Play seamlessly with full support for Microsoft authentication **or** offline mode (custom usernames and UUID generation) without requiring third-party hosting dependencies.
-- **🎨 Custom Skin Selector:** Built-in 3D skin viewer with quick selection of default skins (Steve, Alex, Ari, etc.) and support for offline skin configurations.
-- **📦 Comprehensive Mod & Pack Management:** Browse, install, and update mods, modpacks, resource packs, and shader packs across Fabric, Forge, NeoForge, and Quilt with automated dependency resolution.
-- **☕ Automated Java Management:** Automatically downloads and sets up the exact OpenJDK runtime required for each Minecraft version—no manual Java configuration needed.
-- **🔒 Privacy-Focused:** Stripped of tracking analytics, telemetry, and proprietary ads.
-- **🛡️ Independent & Custom:** Auto-updater decoupled from official Modrinth servers to ensure your personalized setup and fork modifications remain intact.
+- **Blazing Fast Performance:** Powered by a native Rust backend and an optimized Vue 3 frontend, Minotaur starts in milliseconds and consumes minimal system resources.
+- **Offline & Microsoft Accounts:** Play seamlessly with full support for Microsoft authentication **or** offline mode (custom usernames and UUID generation) without requiring third-party hosting dependencies.
+- **Custom Skin Selector:** Built-in 3D skin viewer with quick selection of default skins (Steve, Alex, Ari, etc.) and support for offline skin configurations.
+- **Comprehensive Mod & Pack Management:** Browse, install, and update mods, modpacks, resource packs, and shader packs across Fabric, Forge, NeoForge, and Quilt with automated dependency resolution.
+- **Automated Java Management:** Automatically downloads and sets up the exact OpenJDK runtime required for each Minecraft version—no manual Java configuration needed.
+- **Privacy-Focused:** Stripped of tracking analytics, telemetry, and proprietary ads.
+- **Independent & Custom:** Auto-updater decoupled from official Modrinth servers to ensure your personalized setup and fork modifications remain intact.
 
 ---
 
-## 🚀 Download & Installation
+## Download & Installation
 
 ### Windows
 1. Download the latest `MinotaurLauncher.exe` from the [Releases](https://github.com/alvyn16/Minotaur/releases) page.
@@ -41,7 +41,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust) and [Vue 3](https://vuejs.org/)
 
 ---
 
-## 🛠️ Building from Source
+## Building from Source
 
 ### Prerequisites
 - **Node.js:** v20.x or v22.x LTS ([nodejs.org](https://nodejs.org/))
@@ -85,7 +85,7 @@ pnpm app:dev
 
 ---
 
-## 📂 Architecture
+## Architecture
 
 | Directory | Description |
 |---|---|
@@ -97,6 +97,6 @@ pnpm app:dev
 
 ---
 
-## 📜 License
+## License
 
 Minotaur Launcher is free and open-source software licensed under the **GNU General Public License v3.0** ([GPL-3.0](COPYING.md)).
