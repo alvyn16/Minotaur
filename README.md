@@ -5,12 +5,13 @@
 **A fast, lightweight, and modern open-source Minecraft launcher.**  
 Built with [Tauri v2](https://tauri.app/) (Rust) and [Vue 3](https://vuejs.org/) + [Vite](https://vitejs.dev/).
 
+[![Website](https://img.shields.io/badge/website-minotaur--launcher.vercel.app-1bd96a.svg?style=for-the-badge)](https://minotaur-launcher.vercel.app)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-1bd96a.svg?style=for-the-badge)](COPYING.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-1bd96a.svg?style=for-the-badge)](#)
 [![GitHub stars](https://img.shields.io/github/stars/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/issues)
 
-[Download](#download--installation) • [Features](#key-features) • [Building from Source](#building-from-source) • [Architecture](#architecture)
+[Website](https://minotaur-launcher.vercel.app) • [Download](#download--installation) • [Features](#key-features) • [Building from Source](#building-from-source) • [Architecture](#architecture)
 
 </div>
 
