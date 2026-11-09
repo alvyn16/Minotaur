@@ -11,7 +11,32 @@ Built with [Tauri v2](https://tauri.app/) (Rust) and [Vue 3](https://vuejs.org/)
 [![GitHub stars](https://img.shields.io/github/stars/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/issues)
 
-[Website](https://minotaur-launcher.vercel.app) • [Download](#download--installation) • [Features](#key-features) • [Building from Source](#building-from-source) • [Architecture](#architecture)
+[Website](https://minotaur-launcher.vercel.app) • [Download](#download--installation) • [Screenshots](#screenshots) • [Features](#key-features) • [Building from Source](#building-from-source) • [Architecture](#architecture)
+
+<br />
+
+<img src="apps/landing/public/screenshots/launcher-library.png" alt="Minotaur Launcher - Instance Library" width="800" />
+
+</div>
+
+---
+
+## Screenshots
+
+<div align="center">
+
+### Instance Library
+<img src="apps/landing/public/screenshots/launcher-library.png" alt="Minotaur Launcher - Instance Library" width="750" />
+
+<br />
+
+### Discover Modpacks
+<img src="apps/landing/public/screenshots/launcher-modpacks.jpg" alt="Minotaur Launcher - Discover Modpacks" width="750" />
+
+<br />
+
+### Skin Selector
+<img src="apps/landing/public/screenshots/launcher-skins.jpg" alt="Minotaur Launcher - Skin Selector" width="750" />
 
 </div>
 
