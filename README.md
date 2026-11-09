@@ -57,8 +57,9 @@ Built with [Tauri v2](https://tauri.app/) (Rust) and [Vue 3](https://vuejs.org/)
 ## Download & Installation
 
 ### Windows
-1. Download the latest `MinotaurLauncher.exe` from the [Releases](https://github.com/alvyn16/Minotaur/releases) page.
-2. Place `MinotaurLauncher.exe` in any folder of your choice and run it.
+1. Download the latest **[Minotaur_Launcher_1.0.0_x64_Setup.exe](https://github.com/alvyn16/Minotaur/releases/download/v1.0.0/Minotaur_Launcher_1.0.0_x64_Setup.exe)** (~28 MB) from the [Releases](https://github.com/alvyn16/Minotaur/releases) page.
+2. Run the installer to install Minotaur Launcher to your user applications directory with desktop and start menu shortcuts.
+3. Alternatively, a portable executable **[Minotaur.exe](https://github.com/alvyn16/Minotaur/releases/download/v1.0.0/Minotaur.exe)** (~48 MB) is also available.
 
 > [!NOTE]
 > **Windows SmartScreen Notice:**  
