@@ -1,0 +1,70 @@
+---
+const features = [
+	{
+		title: 'Offline & Microsoft Accounts',
+		description:
+			'Log in with your official Microsoft account or create an offline account with any custom username and UUID for local or cracked community servers.',
+		icon: `<svg class="h-6 w-6 text-minotaur" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>`,
+	},
+	{
+		title: '3D Skin Customizer',
+		description:
+			'Preview and rotate player skins in 3D real-time. Pick from default options (Steve, Alex, Ari, and more) or easily drag and drop your own custom textures.',
+		icon: `<svg class="h-6 w-6 text-minotaur" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+	},
+	{
+		title: 'Blazing Native Speed',
+		description:
+			'Engineered with Tauri v2 (Rust) and Vue 3. Minotaur uses a fraction of the RAM of Electron-based launchers and launches in under a second.',
+		icon: `<svg class="h-6 w-6 text-minotaur" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>`,
+	},
+	{
+		title: '1-Click Mod & Pack Installs',
+		description:
+			'Easily discover, install, and update Fabric, Forge, NeoForge, and Quilt mods, modpacks, resource packs, and shaders with automatic dependency resolution.',
+		icon: `<svg class="h-6 w-6 text-minotaur" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>`,
+	},
+	{
+		title: 'Automated Java Setup',
+		description:
+			'No need to manually install Java or match JDK versions. Minotaur automatically provisions the optimal Eclipse Temurin OpenJDK runtime for each instance.',
+		icon: `<svg class="h-6 w-6 text-minotaur" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>`,
+	},
+	{
+		title: '100% Private & Open Source',
+		description:
+			'Completely free from third-party tracking, telemetry, Sentry logs, and proprietary ads. Licensed under GPL-3.0 with full source code available on GitHub.',
+		icon: `<svg class="h-6 w-6 text-minotaur" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`,
+	},
+];
+---
+
+<section id="features" class="py-20 bg-dark-bg/50 border-t border-dark-border/40">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="text-center max-w-3xl mx-auto">
+			<h2 class="text-xs font-bold uppercase tracking-wider text-minotaur">Engineered for Players</h2>
+			<p class="mt-2 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+				Everything you need in a Minecraft launcher
+			</p>
+			<p class="mt-4 text-base text-slate-400">
+				Built to give you full control over your Minecraft experience without unnecessary bloat or forced logins.
+			</p>
+		</div>
+
+		<div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			{
+				features.map((feature) => (
+					<div class="group relative rounded-2xl border border-dark-border bg-dark-card p-6 transition-all duration-200 hover:-translate-y-1 hover:border-minotaur/40 hover:bg-dark-cardHover hover:shadow-xl hover:shadow-minotaur/5">
+						<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-minotaur/10 border border-minotaur/20 transition-colors group-hover:bg-minotaur/20">
+							<Fragment set:html={feature.icon} />
+						</div>
+						<h3 class="mt-5 text-lg font-bold text-white transition-colors group-hover:text-minotaur">
+							{feature.title}
+						</h3>
+						<p class="mt-2 text-sm text-slate-400 leading-relaxed">{feature.description}</p>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
