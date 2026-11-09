@@ -1,0 +1,58 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-dark-border/80 bg-dark-bg/95 py-12 text-slate-400">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+			<div class="flex items-center gap-3">
+				<span class="text-2xl">🐂</span>
+				<span class="text-lg font-bold text-white">Minotaur Launcher</span>
+				<span class="text-xs text-slate-500">Free and open-source under GPL-3.0</span>
+			</div>
+
+			<div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+				<a
+					href="https://github.com/alvyn16/Minotaur"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="transition-colors hover:text-minotaur"
+				>
+					GitHub
+				</a>
+				<a
+					href="https://github.com/alvyn16/Minotaur/releases"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="transition-colors hover:text-minotaur"
+				>
+					Releases
+				</a>
+				<a
+					href="https://github.com/alvyn16/Minotaur/issues"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="transition-colors hover:text-minotaur"
+				>
+					Report an Issue
+				</a>
+				<a
+					href="https://github.com/alvyn16/Minotaur/blob/main/COPYING.md"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="transition-colors hover:text-minotaur"
+				>
+					License
+				</a>
+			</div>
+		</div>
+
+		<div class="mt-8 border-t border-dark-border/40 pt-6 text-center text-xs text-slate-500">
+			<p>
+				Minotaur Launcher is an independent open-source project. Not an official Minecraft product.
+				Not approved by or associated with Mojang or Microsoft.
+			</p>
+			<p class="mt-1">&copy; {currentYear} Minotaur Launcher Contributors.</p>
+		</div>
+	</div>
+</footer>
