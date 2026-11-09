@@ -1,9 +1,5 @@
-# Copying
+# Minotaur Launcher (Desktop Client) Copying Guidelines
 
-The source code of Modrinth App is licensed under the GNU General Public License, Version 3 only, which is provided in the file [LICENSE](./LICENSE). However, some files listed below are licensed under a different license.
+The source code and assets of Minotaur Launcher are licensed under the GNU General Public License, Version 3 only (GPL-3.0-only).
 
-## Modrinth logo
-
-The use of Modrinth branding elements, including but not limited to the wrench-in-labyrinth logo, the landing image, and any variations thereof, is strictly prohibited without explicit written permission from Rinth, Inc. This includes trademarks, logos, or other branding elements.
-
-> All rights reserved. © 2020-2025 Rinth, Inc.
+Minotaur Launcher is an independent fork and is not affiliated with, endorsed by, or sponsored by Rinth, Inc., Mojang Studios, or Microsoft.

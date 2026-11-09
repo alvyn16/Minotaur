@@ -1,18 +1,10 @@
-# Copying Guidelines
+# Minotaur Launcher Copying Guidelines
 
-All packages in this repository are licensed under their respective licenses. For more information, refer to the LICENSE file in each package.
+Minotaur Launcher is an independent, open-source fork of the Modrinth App.
+Source code in this repository is licensed under the GNU General Public License v3 (GPL-3.0-only).
 
-For detailed information, consult each package's COPYING.md, LICENSE.txt, or LICENSE file, if available.
+## Brand Notice & Disclaimers
 
-## Modrinth Branding
-
-The use of Modrinth branding elements, including but not limited to the wrench-in-labyrinth logo, the landing image, and any variations thereof, is strictly prohibited without explicit written permission from Rinth, Inc. This includes trademarks, logos, or other branding elements.
-
-> All rights reserved. © 2020-2026 Rinth, Inc.
-
-This includes, but may not be limited to, the following files or directories:
-
-- .idea/icon.svg
-- .github/assets/
-
-If you fork this repository, you must remove all Modrinth branding assets from your fork.
+1. **Modrinth**: All original Modrinth trademarks, logos, and proprietary branding assets have been removed from this fork. Minotaur Launcher is not affiliated with, endorsed by, or sponsored by Rinth, Inc.
+2. **Minecraft**: Minecraft is a registered trademark of Mojang Synergies AB / Microsoft Corporation. Minotaur Launcher is not an official Minecraft product and is not approved by or associated with Mojang or Microsoft.
+3. **Minotaur Branding**: Minotaur Launcher visual assets and logos are licensed under GPL-3.0-only alongside the source code.
