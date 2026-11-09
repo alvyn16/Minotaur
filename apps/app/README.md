@@ -1,32 +1,23 @@
-<picture>
-	<source media="(prefers-color-scheme: light)" srcset="../../.github/assets/app_cover_light.png">
-	<img alt="Modrinth App Cover" src="../../.github/assets/app_cover.png">
-</picture>
+# Minotaur Launcher (Desktop Shell)
 
-## Modrinth App
-
-The Modrinth App is a desktop application for managing your Minecraft mods. It is built with [Tauri](https://tauri.app/) and [Vue](https://vuejs.org/).
-
-If you're not a developer and you've stumbled upon this repository, you can download the latest release of the app from the [Modrinth website](https://modrinth.com/app).
+The desktop shell of Minotaur Launcher, built with [Tauri v2](https://tauri.app/) and [Vue 3](https://vuejs.org/).
 
 ## Development
 
-### Pre-requisites
-
-Before you begin, ensure you have the following installed on your machine:
-
-- [Node.js](https://nodejs.org/en/)
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v20+)
 - [pnpm](https://pnpm.io/)
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Tauri](https://v2.tauri.app/start/prerequisites/)
+- [Tauri Prerequisites](https://v2.tauri.app/start/prerequisites/)
 
-### Setup
-
-Follow these steps to set up your development environment:
-
+### Running in Development
 ```bash
 pnpm install
 pnpm app:dev
 ```
 
-You should now have a development build of the app running with hot-reloading enabled. Any changes you make to the code will automatically refresh the app.
+### Compiling Release
+```bash
+pnpm --filter @modrinth/app-frontend build
+cargo build --release --package theseus_gui
+```

@@ -1,48 +1,102 @@
-<picture>
-	<source media="(prefers-color-scheme: light)" srcset=".github/assets/monorepo_cover_light.png">
-	<img alt="Modrinth Monorepo Cover" src=".github/assets/monorepo_cover.png">
-</picture>
+<div align="center">
 
-![Issues](https://img.shields.io/github/issues-raw/Modrinth/code?color=c78aff&label=issues&style=for-the-badge)
-![Pull Requests](https://img.shields.io/github/issues-pr-raw/Modrinth/code?color=c78aff&label=PRs&style=for-the-badge)
-![Contributors](https://img.shields.io/github/contributors/Modrinth/code?color=c78aff&label=contributors&style=for-the-badge)
-![Lines of Code](https://img.shields.io/endpoint?url=https://loctopus.creeperkatze.dev/github/modrinth/code/badge?style=flat&logoColor=white&color=c78aff&style=for-the-badge)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/Modrinth/code?color=c78aff&label=commits&style=for-the-badge)
-![Last Commit](https://img.shields.io/github/last-commit/Modrinth/code?color=c78aff&label=last%20commit&style=for-the-badge)
+# 🐂 Minotaur Launcher
 
-## Modrinth Monorepo
+**A fast, lightweight, and modern open-source Minecraft launcher.**  
+Built with [Tauri v2](https://tauri.app/) (Rust) and [Vue 3](https://vuejs.org/) + [Vite](https://vitejs.dev/).
 
-Welcome to the Modrinth Monorepo, the primary codebase for the Modrinth website, app, API and documentation. It contains ![Lines of code](https://img.shields.io/endpoint?url=https://loctopus.creeperkatze.dev/github/modrinth/code/badge%3Fformat%3Dhuman&logoColor=white&color=black&label=) lines of code and has ![Contributors](https://img.shields.io/github/contributors/Modrinth/code?color=black&label=) contributors!
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-1bd96a.svg?style=for-the-badge)](COPYING.md)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-1bd96a.svg?style=for-the-badge)](#)
+[![GitHub stars](https://img.shields.io/github/stars/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/alvyn16/Minotaur?color=1bd96a&style=for-the-badge)](https://github.com/alvyn16/Minotaur/issues)
 
-If you're not a developer and you've stumbled upon this repository, you can access the web interface on the [Modrinth website](https://modrinth.com) and download the latest release of the app [here](https://modrinth.com/app).
+[Download](#-download--installation) • [Features](#-key-features) • [Building from Source](#-building-from-source) • [Architecture](#-architecture)
 
-## Development
+</div>
 
-This repository contains several projects. For detailed development information, please refer to their respective guides:
+---
 
-| Project       | Directory              | Guide                                                     |
-| ------------- | ---------------------- | --------------------------------------------------------- |
-| Website       | `apps/frontend`        | [Guide](https://docs.modrinth.com/contributing/knossos/)  |
-| App           | `apps/app`             | [Guide](https://docs.modrinth.com/contributing/theseus/)  |
-| API           | `apps/labrinth`        | [Guide](https://docs.modrinth.com/contributing/labrinth/) |
-| Documentation | `apps/docs`            | [Guide](https://docs.modrinth.com/contributing/docs/)     |
+## ✨ Key Features
 
-Shared libraries live in `packages/`.
+- **⚡ Blazing Fast Performance:** Powered by a native Rust backend and an optimized Vue 3 frontend, Minotaur starts in milliseconds and consumes minimal system resources.
+- **👤 Offline & Microsoft Accounts:** Play seamlessly with full support for Microsoft authentication **or** offline mode (custom usernames and UUID generation) without requiring third-party hosting dependencies.
+- **🎨 Custom Skin Selector:** Built-in 3D skin viewer with quick selection of default skins (Steve, Alex, Ari, etc.) and support for offline skin configurations.
+- **📦 Comprehensive Mod & Pack Management:** Browse, install, and update mods, modpacks, resource packs, and shader packs across Fabric, Forge, NeoForge, and Quilt with automated dependency resolution.
+- **☕ Automated Java Management:** Automatically downloads and sets up the exact OpenJDK runtime required for each Minecraft version—no manual Java configuration needed.
+- **🔒 Privacy-Focused:** Stripped of tracking analytics, telemetry, and proprietary ads.
+- **🛡️ Independent & Custom:** Auto-updater decoupled from official Modrinth servers to ensure your personalized setup and fork modifications remain intact.
 
-## Contributing
+---
 
-We welcome contributions! Before submitting any contributions, please read our [contributing guidelines](https://docs.modrinth.com/contributing/getting-started/).
+## 🚀 Download & Installation
 
-If you plan to fork this repository for your own purposes, please review our [copying guidelines](COPYING.md).
+### Windows
+1. Download the latest `MinotaurLauncher.exe` from the [Releases](https://github.com/alvyn16/Minotaur/releases) page.
+2. Place `MinotaurLauncher.exe` in any folder of your choice and run it.
 
-## Security
+> [!NOTE]
+> **Windows SmartScreen Notice:**  
+> Because Minotaur is a community-driven open-source project without a costly commercial code-signing certificate, Windows Defender SmartScreen may display a prompt (*"Windows protected your PC"*).  
+> To run the launcher, click **More info** $\rightarrow$ **Run anyway**.
 
-If you discover a security vulnerability within our codebase, please follow our [responsible disclosure guidelines](https://modrinth.com/legal/security).
+---
 
-## Support
+## 🛠️ Building from Source
 
-If you need help with the Modrinth web interface or app, please visit our [support page](https://support.modrinth.com). For general inquiries, you can also join our [Discord server](https://discord.modrinth.com).
+### Prerequisites
+- **Node.js:** v20.x or v22.x LTS ([nodejs.org](https://nodejs.org/))
+- **pnpm:** v9.x or higher (`corepack enable` or `npm install -g pnpm`)
+- **Rust & Cargo:** Stable 1.85+ ([rustup.rs](https://rustup.rs/))
+- **Build Tools:**
+  - **Windows:** Visual Studio 2022 C++ Build Tools (`MSVC x64`) and WebView2 Runtime
+  - **Linux:** `build-essential`, `libwebkit2gtk-4.1-dev`, `libssl-dev`, `libgtk-3-dev`
+  - **macOS:** Xcode Command Line Tools
 
-## License
+### Steps
 
-All packages in this repository are licensed under their respective licenses. See the [copying guidelines](COPYING.md) for details, including restrictions on Modrinth branding.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/alvyn16/Minotaur.git
+   cd Minotaur
+   ```
+
+2. **Install frontend dependencies:**
+   ```bash
+   pnpm install
+   ```
+
+3. **Build the frontend:**
+   ```bash
+   pnpm --filter @modrinth/app-frontend build
+   ```
+
+4. **Build the launcher (Release mode):**
+   ```bash
+   cargo build --release --package theseus_gui
+   ```
+
+The compiled executable will be located at `target/release/theseus_gui.exe` (or `target/release-with-thin-lto/theseus_gui.exe`).
+
+### Development Mode
+To run the launcher with live hot-reloading:
+```bash
+pnpm app:dev
+```
+
+---
+
+## 📂 Architecture
+
+| Directory | Description |
+|---|---|
+| `apps/app` | Tauri v2 desktop application shell & native window management (Rust) |
+| `apps/app-frontend` | Launcher desktop UI built with Vue 3, Pinia, and Tailwind CSS |
+| `packages/app-lib` | Core game management engine: instance lifecycle, mod loading, file integrity, and auth |
+| `packages/ui` | Shared component library |
+| `packages/assets` | Brand icons, stylesheets, and visual assets |
+
+---
+
+## 📜 License
+
+Minotaur Launcher is free and open-source software licensed under the **GNU General Public License v3.0** ([GPL-3.0](COPYING.md)).
