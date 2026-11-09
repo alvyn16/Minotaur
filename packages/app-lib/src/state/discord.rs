@@ -14,11 +14,16 @@ pub struct DiscordGuard {
     connected: Arc<AtomicBool>,
 }
 
+pub const DISCORD_CLIENT_ID: &str = match option_env!("MINOTAUR_DISCORD_CLIENT_ID") {
+    Some(id) => id,
+    None => "1123683254248148992",
+};
+
 impl DiscordGuard {
     /// Initialize discord IPC client, and attempt to connect to it
     /// If it fails, it will still return a DiscordGuard, but the client will be unconnected
     pub fn init() -> crate::Result<DiscordGuard> {
-        let dipc = DiscordIpcClient::new("1123683254248148992");
+        let dipc = DiscordIpcClient::new(DISCORD_CLIENT_ID);
 
         Ok(DiscordGuard {
             client: Arc::new(RwLock::new(dipc)),
@@ -73,8 +78,8 @@ impl DiscordGuard {
 
         let activity = Activity::new().state(msg).assets(
             Assets::new()
-                .large_image("modrinth_simple")
-                .large_text("Modrinth Logo"),
+                .large_image("minotaur")
+                .large_text("Minotaur Launcher"),
         );
 
         // Attempt to set the activity
