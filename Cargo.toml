@@ -148,6 +148,7 @@ modrinth-log = { path = "packages/modrinth-log" }
 modrinth-util = { path = "packages/modrinth-util" }
 muralpay = { path = "packages/muralpay" }
 murmur2 = "0.1.0"
+md5 = "0.8.1"
 native-dialog = "0.9.7"
 neverbounce = { path = "packages/neverbounce" }
 notify = { version = "8.2.0", default-features = false }

@@ -335,6 +335,18 @@ impl OnlineProfileCacheIntent {
     }
 }
 
+/// Computes the offline player UUID according to standard Java Edition format:
+/// `UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(StandardCharsets.UTF_8))`
+pub fn compute_offline_uuid(username: &str) -> Uuid {
+    let digest = md5::compute(format!("OfflinePlayer:{username}").as_bytes());
+    let mut bytes = digest.0;
+    // Set version to 3 (MD5 based)
+    bytes[6] = (bytes[6] & 0x0f) | 0x30;
+    // Set variant to IETF variant (RFC 4122)
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    Uuid::from_bytes(bytes)
+}
+
 impl Credentials {
     /// Refreshes the authentication tokens for this user if they are expired, or
     /// very close to expiration.
@@ -342,6 +354,10 @@ impl Credentials {
         &mut self,
         exec: impl sqlx::Executor<'_, Database = sqlx::Sqlite> + Copy,
     ) -> crate::Result<()> {
+        if self.refresh_token == "offline" || self.access_token == "0" {
+            return Ok(());
+        }
+
         // Use a margin of 5 minutes to give e.g. Minecraft and potentially
         // other operations that depend on a fresh token 5 minutes to complete
         // from now, and deal with some classes of clock skew
@@ -422,6 +438,10 @@ impl Credentials {
         &self,
         cache_intent: OnlineProfileCacheIntent,
     ) -> Option<Arc<MinecraftProfile>> {
+        if self.refresh_token == "offline" || self.access_token == "0" {
+            return None;
+        }
+
         let max_age = cache_intent.max_age();
         let stale_profile = {
             let mut profile_cache = PROFILE_CACHE.lock().await;
@@ -1704,4 +1724,36 @@ fn generate_oauth_challenge() -> String {
 
     let bytes: Vec<u8> = (0..64).map(|_| rng.random::<u8>()).collect();
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_compute_offline_uuid_steve() {
+        let uuid = compute_offline_uuid("Steve");
+        assert_eq!(uuid.to_string(), "5627dd98-e6be-3c21-b8a8-e92344183641");
+    }
+
+    #[test]
+    fn test_offline_credentials_format() {
+        let uuid = compute_offline_uuid("MinotaurUser");
+        let creds = Credentials {
+            offline_profile: MinecraftProfile {
+                id: uuid,
+                name: "MinotaurUser".to_string(),
+                ..Default::default()
+            },
+            access_token: "0".to_string(),
+            refresh_token: "offline".to_string(),
+            expires: Utc::now() + Duration::days(36500),
+            active: true,
+        };
+
+        assert_eq!(creds.refresh_token, "offline");
+        assert_eq!(creds.access_token, "0");
+        assert_eq!(creds.offline_profile.name, "MinotaurUser");
+        assert_eq!(creds.offline_profile.id, uuid);
+    }
 }

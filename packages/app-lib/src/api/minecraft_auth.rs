@@ -97,3 +97,43 @@ pub async fn users() -> crate::Result<Vec<Credentials>> {
     let users = Credentials::get_all(&state.pool).await?;
     Ok(users.into_iter().map(|x| x.1).collect())
 }
+
+/// Adds an offline/cracked user account with a valid Minecraft Java username.
+#[tracing::instrument]
+pub async fn add_offline_user(username: String) -> crate::Result<Credentials> {
+    let username = username.trim().to_string();
+    if username.is_empty()
+        || username.len() > 16
+        || !username.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+    {
+        anyhow::bail!(
+            "Invalid Minecraft username: must be 1-16 characters containing only letters, numbers, and underscores"
+        );
+    }
+
+    let state = State::get().await?;
+    let uuid = crate::state::compute_offline_uuid(&username);
+    let credentials = Credentials {
+        offline_profile: crate::state::MinecraftProfile {
+            id: uuid,
+            name: username,
+            ..Default::default()
+        },
+        access_token: "0".to_string(),
+        refresh_token: "offline".to_string(),
+        expires: chrono::Utc::now() + chrono::Duration::days(36500),
+        active: true,
+    };
+
+    credentials.upsert(&state.pool).await?;
+
+    if let Err(error) =
+        crate::onboarding_checklist::mark_logged_into_minecraft().await
+    {
+        tracing::warn!(
+            "Failed to mark Minecraft login in onboarding checklist: {error}"
+        );
+    }
+
+    Ok(credentials)
+}
