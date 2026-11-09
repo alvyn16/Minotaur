@@ -4,11 +4,21 @@
 		class="flex flex-col gap-3 bg-button-bg border border-solid border-surface-5 rounded-xl p-3 mt-2"
 	>
 		<span>{{ formatMessage(messages.notSignedIn) }}</span>
-		<Button type="colored" color="brand" :disabled="loginDisabled" @click="login()">
-			<LogInIcon v-if="!loginDisabled" />
-			<SpinnerIcon v-else class="animate-spin" />
-			{{ formatMessage(messages.signInToMinecraft) }}
-		</Button>
+		<div class="flex flex-col gap-2">
+			<Button type="colored" color="brand" :disabled="loginDisabled" @click="login()">
+				<LogInIcon v-if="!loginDisabled" />
+				<SpinnerIcon v-else class="animate-spin" />
+				{{ formatMessage(messages.signInToMinecraft) }}
+			</Button>
+			<Button
+				class="w-full !bg-button-bg !text-primary ![box-shadow:var(--shadow-button)]"
+				:disabled="loginDisabled"
+				@click="openOfflineModal"
+			>
+				<CircleUserIcon />
+				Add Offline Account
+			</Button>
+		</div>
 	</div>
 	<Accordion
 		v-else
@@ -78,15 +88,57 @@
 					@click="login()"
 				>
 					<PlusIcon />
-					{{ formatMessage(messages.addAccount) }}
+					{{ formatMessage(messages.addAccount) }} (Microsoft)
+				</Button>
+				<Button
+					v-if="accounts.length > 0"
+					class="w-full !bg-button-bg !text-primary ![box-shadow:var(--shadow-button)]"
+					:disabled="loginDisabled"
+					@click="openOfflineModal"
+				>
+					<CircleUserIcon />
+					Add Offline Account
 				</Button>
 			</div>
 		</div>
 	</Accordion>
+
+	<ModalWrapper ref="offlineModal" header="Add Offline Account">
+		<div class="flex flex-col gap-4 p-4 min-w-[320px]">
+			<p class="text-secondary text-sm m-0">
+				Play in offline mode or connect to cracked servers without a Microsoft account.
+			</p>
+			<div class="flex flex-col gap-1.5">
+				<label class="text-sm font-medium text-primary">Minecraft Username</label>
+				<input
+					v-model="offlineUsername"
+					type="text"
+					placeholder="Player"
+					maxlength="16"
+					class="px-3 py-2 bg-surface-2 border border-solid border-surface-5 rounded-lg text-primary outline-none focus:border-brand text-sm"
+					@keydown.enter.prevent="submitOfflineAccount"
+				/>
+				<span v-if="offlineError" class="text-xs text-red">{{ offlineError }}</span>
+			</div>
+			<div class="flex justify-end gap-2 mt-2">
+				<Button type="quiet" @click="offlineModal?.hide()">Cancel</Button>
+				<Button
+					type="colored"
+					color="brand"
+					:disabled="!isOfflineValid || offlineSubmitting"
+					@click="submitOfflineAccount"
+				>
+					<SpinnerIcon v-if="offlineSubmitting" class="animate-spin" />
+					Add Account
+				</Button>
+			</div>
+		</div>
+	</ModalWrapper>
 </template>
 
 <script setup lang="ts">
 import {
+	CircleUserIcon,
 	LogInIcon,
 	PlusIcon,
 	RadioButtonCheckedIcon,
@@ -104,14 +156,16 @@ import {
 	useVIntl,
 } from '@modrinth/ui'
 import type { Ref } from 'vue'
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, ref, useTemplateRef } from 'vue'
 
+import ModalWrapper from '@/components/ui/modal/ModalWrapper.vue'
 import { useAppEvent } from '@/composables/use-app-event'
 import { handleSevereError } from '@/composables/use-error.js'
 import { trackEvent } from '@/helpers/analytics'
 import {
 	get_default_user,
 	login as login_flow,
+	login_offline,
 	remove_user,
 	set_default_user,
 	users,
@@ -256,6 +310,48 @@ async function logout(id: string) {
 		emit('change')
 	}
 	trackEvent('AccountLogOut')
+}
+
+const offlineModal = useTemplateRef('offlineModal')
+const offlineUsername = ref('')
+const offlineError = ref('')
+const offlineSubmitting = ref(false)
+
+const isOfflineValid = computed(() => {
+	const trimmed = offlineUsername.value.trim()
+	return trimmed.length >= 1 && trimmed.length <= 16 && /^[a-zA-Z0-9_]+$/.test(trimmed)
+})
+
+function openOfflineModal() {
+	offlineUsername.value = ''
+	offlineError.value = ''
+	offlineModal.value?.show()
+}
+
+async function submitOfflineAccount() {
+	const trimmed = offlineUsername.value.trim()
+	if (!trimmed) {
+		offlineError.value = 'Username cannot be empty'
+		return
+	}
+	if (!/^[a-zA-Z0-9_]{1,16}$/.test(trimmed)) {
+		offlineError.value = 'Must be 1-16 letters, numbers, or underscores'
+		return
+	}
+
+	offlineSubmitting.value = true
+	offlineError.value = ''
+	try {
+		const newCreds = await login_offline(trimmed)
+		if (newCreds) {
+			await setAccount(newCreds)
+		}
+		offlineModal.value?.hide()
+	} catch (e: any) {
+		offlineError.value = e?.message ?? String(e)
+	} finally {
+		offlineSubmitting.value = false
+	}
 }
 
 useAppEvent('process', async (e) => {
