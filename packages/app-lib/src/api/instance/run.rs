@@ -43,9 +43,19 @@ pub async fn run(
     )
     .await?;
 
-    let default_account = Credentials::get_default_credential(&state.pool)
-        .await?
-        .ok_or(ErrorKind::NotLoggedIn)?;
+    let default_account = match Credentials::get_default_credential(&state.pool).await? {
+        Some(account) => account,
+        None => {
+            let all = Credentials::get_all(&state.pool).await?;
+            if let Some((_uuid, mut first)) = all.into_iter().next() {
+                first.active = true;
+                first.upsert(&state.pool).await?;
+                first
+            } else {
+                crate::api::minecraft_auth::add_offline_user("Player".to_string()).await?
+            }
+        }
+    };
 
     run_credentials(instance_id, &default_account, quick_play_type).await
 }
@@ -227,7 +237,8 @@ async fn run_credentials(
         mc_set_options.push(("fullscreen".to_string(), "true".to_string()));
     }
 
-    if let Some(project_id) = server_play_project_id(&context.link)
+    if !credentials.is_offline()
+        && let Some(project_id) = server_play_project_id(&context.link)
         && !project_id.trim().is_empty()
     {
         let server_id = uuid::Uuid::new_v4().to_string();

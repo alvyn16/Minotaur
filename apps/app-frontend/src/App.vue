@@ -251,7 +251,7 @@ const forceSidebar = computed(
 		route.path.startsWith('/project') ||
 		route.path.startsWith('/user'),
 )
-const sidebarVisible = computed(() => sidebarToggled.value || forceSidebar.value)
+const sidebarVisible = computed(() => forceSidebar.value)
 const hostingRouteActive = computed(() => route.path.startsWith('/hosting'))
 const hostingUpdateRequired = computed(
 	() =>
@@ -338,9 +338,7 @@ const hasPlus = computed(
 		(hasMidasBadge(credentials.value.user) ||
 			hasActivePride26Midas(authenticatedModrinthUser.value?.campaigns?.pride_26)),
 )
-const showAd = computed(
-	() => sidebarVisible.value && !hasPlus.value && credentials.value !== undefined,
-)
+const showAd = computed(() => false)
 const adConsentAvailable = computed(() => credentials.value !== undefined && !hasPlus.value)
 providePageContext({
 	hierarchicalSidebarAvailable: ref(true),
@@ -2168,9 +2166,9 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		<AppTitleBar
 			:can-navigate-back="canNavigateBack"
 			:can-navigate-forward="canNavigateForward"
-			:show-sidebar-toggle="!forceSidebar && appSettings.toggleSidebar"
-			:sidebar-toggled="sidebarToggled"
-			@toggle-sidebar="sidebarToggled = !sidebarToggled"
+			:show-sidebar-toggle="false"
+			:sidebar-toggled="false"
+			@toggle-sidebar="() => {}"
 		/>
 	</div>
 	<div
@@ -2236,13 +2234,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		</div>
 		<AppSidebar
 			ref="sidebar"
-			:credentials="credentials"
-			:has-plus="hasPlus"
-			:show-ad="showAd"
 			:visible="sidebarVisible"
-			:request-sign-in="() => requestSignIn()"
-			@create-instance="installationModal?.show()"
-			@login-modrinth="signIn"
 		/>
 	</div>
 	<I18nDebugPanel />

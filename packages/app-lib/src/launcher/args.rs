@@ -251,6 +251,7 @@ pub async fn get_minecraft_arguments(
     quick_play_type: &QuickPlayType,
     quick_play_version: QuickPlayVersion,
 ) -> crate::Result<Vec<String>> {
+    let is_offline = credentials.is_offline();
     let access_token = credentials.access_token.clone();
     let profile = credentials.maybe_online_profile().await;
     let mut parsed_arguments = Vec::new();
@@ -265,6 +266,7 @@ pub async fn get_minecraft_arguments(
                     &access_token,
                     &profile.name,
                     profile.id,
+                    is_offline,
                     version,
                     asset_index_name,
                     game_directory,
@@ -284,6 +286,7 @@ pub async fn get_minecraft_arguments(
                 &access_token,
                 &profile.name,
                 profile.id,
+                is_offline,
                 version,
                 asset_index_name,
                 game_directory,
@@ -316,6 +319,7 @@ fn parse_minecraft_argument(
     access_token: &str,
     username: &str,
     uuid: Uuid,
+    is_offline: bool,
     version: &str,
     asset_index_name: &str,
     game_directory: &Path,
@@ -335,7 +339,7 @@ fn parse_minecraft_argument(
         .replace("${uuid}", &uuid.simple().to_string())
         .replace("${clientid}", "c4502edb-87c6-40cb-b595-64a280cf8906")
         .replace("${user_properties}", "{}")
-        .replace("${user_type}", "msa")
+        .replace("${user_type}", if is_offline { "mojang" } else { "msa" })
         .replace("${version_name}", version)
         .replace("${assets_index_name}", asset_index_name)
         .replace(

@@ -33,6 +33,7 @@ import { platform as getOsPlatform, version as getOsVersion } from '@tauri-apps/
 import { computed, ref } from 'vue'
 
 import { useAppSettings } from '@/composables/use-app-settings.ts'
+import MinecraftAccountsSettings from '@/features/settings/account/minecraft-accounts-settings.vue'
 import PrivacySettings from '@/features/settings/account/privacy-settings.vue'
 import ProfileSettings from '@/features/settings/account/profile-settings.vue'
 import SocialSettings from '@/features/settings/account/social-settings.vue'
@@ -130,6 +131,15 @@ const tabs = [
 		icon: ToggleRightIcon,
 		content: FeatureFlagSettings,
 		developerOnly: true,
+	},
+	{
+		name: defineMessage({
+			id: 'app.settings.tabs.minecraft-accounts',
+			defaultMessage: 'Minecraft Accounts',
+		}),
+		category: tabCategories.account,
+		icon: UserIcon,
+		content: MinecraftAccountsSettings,
 	},
 	{
 		name: commonSettingsMessages.profile,

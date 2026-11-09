@@ -348,6 +348,10 @@ pub fn compute_offline_uuid(username: &str) -> Uuid {
 }
 
 impl Credentials {
+    pub fn is_offline(&self) -> bool {
+        self.refresh_token == "offline" || self.access_token == "0"
+    }
+
     /// Refreshes the authentication tokens for this user if they are expired, or
     /// very close to expiration.
     async fn refresh(
