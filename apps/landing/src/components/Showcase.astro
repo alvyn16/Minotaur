@@ -3,6 +3,34 @@
 
 <section id="showcase" class="relative py-12 md:py-20">
 	<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+		<!-- Screenshot Tabs Switcher -->
+		<div class="flex flex-wrap items-center justify-center gap-2 mb-6">
+			<button
+				id="tab-skins"
+				type="button"
+				class="tab-btn active inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition-all border border-minotaur bg-minotaur/10 text-minotaur cursor-pointer"
+				data-img="/screenshots/launcher-skins.jpg"
+			>
+				Skin Selector
+			</button>
+			<button
+				id="tab-modpacks"
+				type="button"
+				class="tab-btn inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition-all border border-dark-border bg-dark-card text-slate-400 hover:text-white hover:border-slate-600 cursor-pointer"
+				data-img="/screenshots/launcher-modpacks.jpg"
+			>
+				Discover Modpacks
+			</button>
+			<button
+				id="tab-library"
+				type="button"
+				class="tab-btn inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition-all border border-dark-border bg-dark-card text-slate-400 hover:text-white hover:border-slate-600 cursor-pointer"
+				data-img="/screenshots/launcher-library.png"
+			>
+				Instance Library
+			</button>
+		</div>
+
 		<div class="relative mx-auto rounded-2xl border border-dark-border bg-dark-card/90 p-2 sm:p-4 shadow-2xl shadow-minotaur/10">
 			<!-- Window Title Bar -->
 			<div class="flex items-center justify-between border-b border-dark-border/80 px-4 py-3 mb-2">
@@ -13,7 +41,7 @@
 				</div>
 				<div class="text-xs font-medium text-slate-400 flex items-center gap-2">
 					<span class="inline-block h-2 w-2 rounded-full bg-minotaur"></span>
-					<span>Minotaur Launcher</span>
+					<span id="window-title">Minotaur Launcher - Skin Selector</span>
 				</div>
 				<div class="w-12"></div>
 			</div>
@@ -21,10 +49,11 @@
 			<!-- Image Mockup -->
 			<div class="relative overflow-hidden rounded-xl border border-dark-border/60 bg-[#12161a]">
 				<img
-					src="/screenshots/launcher-preview.jpg"
-					alt="Minotaur Launcher interface showing the 3D skin customizer and offline accounts"
-					class="w-full h-auto object-cover rounded-xl"
-					loading="lazy"
+					id="showcase-img"
+					src="/screenshots/launcher-skins.jpg"
+					alt="Minotaur Launcher interface showing the 3D skin customizer"
+					class="w-full h-auto object-cover rounded-xl transition-opacity duration-200"
+					loading="eager"
 				/>
 			</div>
 
@@ -43,3 +72,33 @@
 		</div>
 	</div>
 </section>
+
+<script>
+	const tabs = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+	const img = document.getElementById('showcase-img') as HTMLImageElement | null;
+	const title = document.getElementById('window-title');
+
+	tabs.forEach((tab) => {
+		tab.addEventListener('click', () => {
+			tabs.forEach((t) => {
+				t.classList.remove('border-minotaur', 'bg-minotaur/10', 'text-minotaur');
+				t.classList.add('border-dark-border', 'bg-dark-card', 'text-slate-400');
+			});
+			tab.classList.remove('border-dark-border', 'bg-dark-card', 'text-slate-400');
+			tab.classList.add('border-minotaur', 'bg-minotaur/10', 'text-minotaur');
+
+			const newSrc = tab.getAttribute('data-img');
+			if (img && newSrc) {
+				img.style.opacity = '0.5';
+				setTimeout(() => {
+					img.src = newSrc;
+					img.style.opacity = '1';
+				}, 100);
+			}
+
+			if (title) {
+				title.textContent = `Minotaur Launcher - ${tab.textContent?.trim()}`;
+			}
+		});
+	});
+</script>
