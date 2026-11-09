@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = '🐂 Minotaur Launcher - Fast, Privacy-First Minecraft Launcher',
+	description = 'Play your way with offline and Microsoft accounts, built-in 3D skin customizer, automated modpack management, and zero telemetry.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://github.com/alvyn16/Minotaur" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body class="bg-dark-bg text-[#e6edf3] antialiased selection:bg-minotaur selection:text-black">
+		<slot />
+	</body>
+</html>
