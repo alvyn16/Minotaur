@@ -346,9 +346,15 @@ const skinTexture = computedAsync(async () => {
 const capeTexture = computed(() => currentCape.value?.texture)
 const skinVariant = computed(() => selectedSkin.value?.variant)
 const skinNametag = computed(() => (appSettings.hideNametagSkinsPage ? undefined : username.value))
+const isOfflineUser = computed(() => {
+	if (!currentUser.value) return true
+	const acc = currentUser.value as any
+	return acc.refresh_token === 'offline' || acc.access_token === '0'
+})
 const isSkinManagementReadOnly = computed(
 	() =>
 		!!currentUser.value &&
+		!isOfflineUser.value &&
 		(offline.value || (authServerQuery.isError.value && !authServerQuery.isLoading.value)),
 )
 const hasPendingSkinChange = computed(
@@ -546,10 +552,30 @@ function getDefaultSkinSectionSortIndex(section: string) {
 	return index === -1 ? DEFAULT_SKIN_SECTION_SORT_ORDER.length : index
 }
 
-function changeSkin(newSkin: Skin) {
+async function changeSkin(newSkin: Skin) {
 	if (isSkinManagementReadOnly.value) return
 
 	selectedSkin.value = newSkin
+
+	// For offline users and demo mode, auto-apply immediately so clicking any skin in the grid
+	// persists right away without having to find and click a separate "Apply" button!
+	if (isOfflineUser.value) {
+		await applySelectedSkinDirect(newSkin)
+	}
+}
+
+async function applySelectedSkinDirect(skinToApply: Skin) {
+	if (!skinToApply || isApplyingSkin.value) return
+
+	isApplyingSkin.value = true
+	try {
+		await equip_skin(skinToApply)
+		setLocallyEquippedSkin(skinToApply)
+	} catch (error) {
+		handleError(error as Error)
+	} finally {
+		isApplyingSkin.value = false
+	}
 }
 
 function resetSelectedSkin() {
@@ -780,7 +806,6 @@ function schedulePendingSkinRefresh() {
 async function applySelectedSkin() {
 	const skinToApply = selectedSkin.value
 	if (
-		!currentUser.value ||
 		!skinToApply ||
 		!hasPendingSkinChange.value ||
 		isApplyingSkin.value ||
@@ -792,7 +817,9 @@ async function applySelectedSkin() {
 	try {
 		await equip_skin(skinToApply)
 		setLocallyEquippedSkin(skinToApply)
-		schedulePendingSkinRefresh()
+		if (!isOfflineUser.value) {
+			schedulePendingSkinRefresh()
+		}
 	} catch (error) {
 		if (isMinecraftSkinRateLimitError(error)) {
 			notifications.addNotification({
@@ -1162,17 +1189,15 @@ await loadSkins()
 								</Button>
 								<Button
 									v-tooltip="
-										!currentUser
-											? formatMessage(messages.demoApplyTooltip)
-											: selectedSkinHasEarsFeatures
-												? formatMessage(messages.applyButton)
-												: undefined
+										selectedSkinHasEarsFeatures
+											? formatMessage(messages.applyButton)
+											: undefined
 									"
 									type="colored"
 									color="brand"
 									size="lg"
 									class="skin-preview-action-button"
-									:disabled="!currentUser || isApplyingSkin || isSkinManagementReadOnly"
+									:disabled="isApplyingSkin || isSkinManagementReadOnly"
 									:aria-label="formatMessage(messages.applyButton)"
 									@click="applySelectedSkin"
 								>

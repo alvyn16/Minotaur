@@ -289,6 +289,18 @@ async fn run_credentials(
 
     if !credentials.is_offline() {
         crate::minecraft_skins::flush_pending_skin_change().await?;
+    } else {
+        let instance_dir = state
+            .directories
+            .instances_dir()
+            .join(&context.instance.path);
+        let _ = crate::minecraft_skins::export_offline_skin_to_instance(
+            &state.pool,
+            credentials.offline_profile.id,
+            &credentials.offline_profile.name,
+            &instance_dir,
+        )
+        .await;
     }
     crate::launcher::launch_minecraft(
         &java_args,

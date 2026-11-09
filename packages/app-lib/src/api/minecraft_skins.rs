@@ -53,6 +53,7 @@ use std::{
 };
 
 use anyhow::{Context, anyhow, bail};
+use base64::Engine;
 pub use bytes::Bytes;
 use futures::{StreamExt, TryStreamExt, stream};
 use serde::{Deserialize, Serialize};
@@ -352,14 +353,23 @@ pub async fn get_available_skins() -> crate::Result<Vec<Skin>> {
     let Some(selected_credentials) =
         Credentials::get_default_credential(&state.pool).await?
     else {
+        let saved_offline = get_offline_equipped_skin(&state.pool, Uuid::nil()).await;
         let fallback_default_skin = get_fallback_default_skin()?;
+
+        let target_texture_key = saved_offline
+            .as_ref()
+            .map(|s| s.texture_key.as_str())
+            .unwrap_or(fallback_default_skin.texture_key.as_ref());
+        let target_variant = saved_offline
+            .as_ref()
+            .map(|s| s.variant)
+            .unwrap_or(fallback_default_skin.variant);
 
         return Ok(assets::DEFAULT_SKINS
             .iter()
             .map(|skin| Skin {
-                is_equipped: skin.texture_key
-                    == fallback_default_skin.texture_key
-                    && skin.variant == fallback_default_skin.variant,
+                is_equipped: skin.texture_key.as_ref() == target_texture_key
+                    && skin.variant == target_variant,
                 ..skin.clone()
             })
             .collect());
@@ -390,7 +400,12 @@ pub async fn get_available_skins() -> crate::Result<Vec<Skin>> {
 
     let fallback_default_skin = get_fallback_default_skin()?;
     let offline_skin = if selected_credentials.is_offline() {
-        get_offline_equipped_skin(&state.pool, profile_id).await
+        let saved = get_offline_equipped_skin(&state.pool, profile_id).await;
+        if saved.is_some() {
+            saved
+        } else {
+            get_offline_equipped_skin(&state.pool, Uuid::nil()).await
+        }
     } else {
         None
     };
@@ -589,14 +604,17 @@ pub async fn add_and_equip_custom_skin(
     }
 
     let state = State::get().await?;
-    let selected_credentials = Credentials::get_default_credential(&state.pool)
-        .await?
-        .ok_or(ErrorKind::NotLoggedIn)?;
+    let selected_credentials = Credentials::get_default_credential(&state.pool).await?;
     let cape_id = cape.map(|cape| cape.id);
     let local_texture_key = local_skin_texture_key(&texture_blob);
 
+    let profile_id = match &selected_credentials {
+        Some(creds) => creds.offline_profile.id,
+        None => Uuid::nil(),
+    };
+
     CustomMinecraftSkin::add(
-        selected_credentials.offline_profile.id,
+        profile_id,
         &local_texture_key,
         &texture_blob,
         variant,
@@ -606,15 +624,24 @@ pub async fn add_and_equip_custom_skin(
     )
     .await?;
 
-    if selected_credentials.is_offline() {
+    if selected_credentials.as_ref().map_or(true, |c| c.is_offline()) {
         set_offline_equipped_skin(
             &state.pool,
-            selected_credentials.offline_profile.id,
+            profile_id,
             &local_texture_key,
             variant,
         )
         .await?;
-    } else {
+        if profile_id != Uuid::nil() {
+            let _ = set_offline_equipped_skin(
+                &state.pool,
+                Uuid::nil(),
+                &local_texture_key,
+                variant,
+            )
+            .await;
+        }
+    } else if let Some(selected_credentials) = selected_credentials {
         set_pending_skin_change(PendingSkinChange::AddAndEquipCustom {
             selected_credentials,
             texture_blob: Bytes::clone(&texture_blob),
@@ -756,8 +783,19 @@ async fn add_and_equip_custom_skin_now(
 pub async fn equip_skin(skin: Skin) -> crate::Result<()> {
     let state = State::get().await?;
     let selected_credentials = Credentials::get_default_credential(&state.pool)
-        .await?
-        .ok_or(ErrorKind::NotLoggedIn)?;
+        .await?;
+
+    let Some(selected_credentials) = selected_credentials else {
+        // No account logged in yet: persist as global offline skin (Uuid::nil())
+        set_offline_equipped_skin(
+            &state.pool,
+            Uuid::nil(),
+            &skin.texture_key,
+            skin.variant,
+        )
+        .await?;
+        return Ok(());
+    };
 
     if selected_credentials.is_offline() {
         set_offline_equipped_skin(
@@ -767,6 +805,13 @@ pub async fn equip_skin(skin: Skin) -> crate::Result<()> {
             skin.variant,
         )
         .await?;
+        let _ = set_offline_equipped_skin(
+            &state.pool,
+            Uuid::nil(),
+            &skin.texture_key,
+            skin.variant,
+        )
+        .await;
         return Ok(());
     }
 
@@ -1502,6 +1547,68 @@ async fn sync_cape(
             }
         }
     }
+
+    Ok(())
+}
+
+/// Exports the equipped offline skin texture as a PNG to common offline skin mod paths in the instance
+/// directory (e.g. `config/offlineskins/<username>.png` and `CustomSkinLoader/skins/<username>.png`).
+pub async fn export_offline_skin_to_instance(
+    pool: &sqlx::SqlitePool,
+    profile_id: Uuid,
+    username: &str,
+    instance_dir: &std::path::Path,
+) -> crate::Result<()> {
+    let offline_skin = match get_offline_equipped_skin(pool, profile_id).await {
+        Some(skin) => Some(skin),
+        None => get_offline_equipped_skin(pool, Uuid::nil()).await,
+    };
+
+    let Some(offline_skin) = offline_skin else {
+        return Ok(());
+    };
+
+    let texture_bytes: Option<Vec<u8>> = if let Ok(Some(custom)) =
+        crate::state::minecraft_skins::CustomMinecraftSkin::get_by_texture(
+            profile_id,
+            &offline_skin.texture_key,
+            pool,
+        )
+        .await
+    {
+        custom.texture_blob(pool).await.ok().map(|b| b.to_vec())
+    } else {
+        assets::DEFAULT_SKINS
+            .iter()
+            .find(|s| s.texture_key.as_ref() == offline_skin.texture_key.as_str())
+            .and_then(|s| {
+                let url_str = s.texture.as_str();
+                if let Some(base64_part) = url_str.strip_prefix("data:image/png;base64,") {
+                    base64::engine::general_purpose::STANDARD.decode(base64_part).ok()
+                } else {
+                    None
+                }
+            })
+    };
+
+    let Some(bytes) = texture_bytes else {
+        return Ok(());
+    };
+
+    // 1. OfflineSkins mod: <instance_dir>/config/offlineskins/<username>.png
+    let offlineskins_dir = instance_dir.join("config").join("offlineskins");
+    let _ = tokio::fs::create_dir_all(&offlineskins_dir).await;
+    let _ = tokio::fs::write(offlineskins_dir.join(format!("{username}.png")), &bytes).await;
+
+    // 2. CustomSkinLoader mod: <instance_dir>/CustomSkinLoader/skins/<username>.png
+    let csl_dir = instance_dir.join("CustomSkinLoader").join("skins");
+    let _ = tokio::fs::create_dir_all(&csl_dir).await;
+    let _ = tokio::fs::write(csl_dir.join(format!("{username}.png")), &bytes).await;
+
+    // 3. Skin Swapper / cachedImages: <instance_dir>/cachedImages/skins/<username>.png
+    let cached_dir = instance_dir.join("cachedImages").join("skins");
+    let _ = tokio::fs::create_dir_all(&cached_dir).await;
+    let _ = tokio::fs::write(cached_dir.join(format!("{username}.png")), &bytes).await;
 
     Ok(())
 }
