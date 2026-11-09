@@ -83,12 +83,23 @@ To run the launcher with live hot-reloading:
 pnpm app:dev
 ```
 
+To run the landing page website locally:
+```bash
+pnpm landing:dev
+```
+
+To build the landing page for production (Vercel):
+```bash
+pnpm landing:build
+```
+
 ---
 
 ## Architecture
 
 | Directory | Description |
 |---|---|
+| `apps/landing` | Official landing page website (Astro v5 + Tailwind CSS, hosted on Vercel) |
 | `apps/app` | Tauri v2 desktop application shell & native window management (Rust) |
 | `apps/app-frontend` | Launcher desktop UI built with Vue 3, Pinia, and Tailwind CSS |
 | `packages/app-lib` | Core game management engine: instance lifecycle, mod loading, file integrity, and auth |
